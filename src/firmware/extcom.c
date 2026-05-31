@@ -820,17 +820,26 @@ static int16_t process_bafang_display_write_mode()
 
 	if (compute_checksum(msgbuf, 3) == msgbuf[3])
 	{
-		switch (msgbuf[2])
+		// "Operation mode Toggle" (g_config.assist_mode_select):
+		// - OFF  : le display pilote le mode, on applique la trame normalement.
+		// - != OFF : le firmware est seul maitre du mode (hack PAS/lumiere/frein).
+		//   On ignore les trames WRITE_MODE du display pour ne pas qu'il ecrase
+		//   le mode SPORT (cas du display 860C qui emet STANDARD en continu).
+		//   La trame reste consommee (return 4) pour resynchroniser le protocole.
+		if (g_config.assist_mode_select == ASSIST_MODE_SELECT_OFF)
 		{
-		case 0x02:
-			app_set_operation_mode(OPERATION_MODE_DEFAULT);
-			break;
-		case 0x04:
-			app_set_operation_mode(OPERATION_MODE_SPORT);
-			break;
-		default:
-			// Unsupported mode, ignore
-			break;
+			switch (msgbuf[2])
+			{
+			case 0x02:
+				app_set_operation_mode(OPERATION_MODE_DEFAULT);
+				break;
+			case 0x04:
+				app_set_operation_mode(OPERATION_MODE_SPORT);
+				break;
+			default:
+				// Unsupported mode, ignore
+				break;
+			}
 		}
 	}
 	else
