@@ -1,0 +1,27 @@
+# Racine du dépôt bbs-fw.
+# Les artefacts de build sont déjà couverts par des .gitignore dédiés :
+#   - src/firmware/.gitignore (SDCC : *.rel, *.ihx, *.hex, *.lst, *.map, ...)
+#   - src/tool/.gitignore     (Visual Studio : bin/, obj/, ...)
+# Ce fichier ne traite que les éléments transverses au dépôt.
+
+# Fichiers OS
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+$RECYCLE.BIN/
+
+# Éditeurs / IDE
+.vscode/
+.idea/
+*.swp
+*~
+
+# Binaires/firmwares compilés copiés à la racine (build local)
+*.hex
+*.ihx
+*.exe
+*.pdb
+
+# Sorties de release locales
+/release/*.zip
